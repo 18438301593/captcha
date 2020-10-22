@@ -6,10 +6,14 @@ package club.jiajiajia.captcha.captcha;
  * @Author Jiajiajia
  * @Version V1.0
  **/
+
 import java.awt.*;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.QuadCurve2D;
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
+import java.util.Base64;
+
 public abstract class AbstractDraw extends Randoms {
     // 常用颜色
     public static final int[][] COLOR = {{0, 135, 255}, {51, 153, 51}, {255, 102, 102}, {255, 153, 0}, {153, 102, 0}, {153, 102, 153}, {51, 153, 153}, {102, 102, 255}, {0, 102, 204}, {204, 51, 51}, {0, 153, 204}, {0, 51, 102}};
@@ -99,6 +103,20 @@ public abstract class AbstractDraw extends Randoms {
      * @return 是否成功
      */
     public abstract boolean out(OutputStream os);
+
+    public abstract String toBase64();
+
+    /**
+     * 输出base64编码
+     *
+     * @param type 编码头
+     * @return base64编码字符串
+     */
+    public String toBase64(String type) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        out(outputStream);
+        return type + Base64.getEncoder().encodeToString(outputStream.toByteArray());
+    }
     /**
      * 获取当前的验证码
      *

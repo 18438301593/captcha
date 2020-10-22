@@ -43,6 +43,12 @@ public class SpecCaptcha extends AbstractDraw {
     public boolean out(OutputStream out) {
         return graphicsImage(textChar(), out);
     }
+
+    @Override
+    public String toBase64() {
+        return toBase64("data:image/png;base64,");
+    }
+
     /**
      * 生成验证码图形
      *

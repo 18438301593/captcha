@@ -31,7 +31,7 @@ public class CaptchaServlet extends HttpServlet {
     }
 
     public void setHeader(HttpServletResponse response) {
-        response.setContentType("image/gif");
+        response.setContentType("image/png");
         response.setHeader("Pragma", "No-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
