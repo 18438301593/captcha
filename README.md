@@ -5,14 +5,14 @@
 1.配置验证码请求路径：jiajiajia.captcha.path
 2.在接口上加 @Captcha 注解即可，在请求接口的时候加code参数，该参数是验证码
 
-依赖
+# 依赖
 <dependency>
     <groupId>club.jiajiajia.captcha</groupId>
     <artifactId>captcha</artifactId>
     <version>1.0-SNAPSHOT</version>
 </dependency>
 
-配置文件
+# 配置文件
 jiajiajia:
   captcha:
     path: /captcha #图片验证码请求路径
@@ -31,7 +31,7 @@ jiajiajia:
   captcha:
     path: /captcha #图片验证码请求路径
 
-参数说明以及配置：
+# 参数说明以及配置：
 1.当path参数存在时，服务才会启用。path参数也是验证码请求的路径，通过请求该路径获取图片验证码
 2.session-key参数， 该框架默认把生成的验证码参数存放session中，而存放在session中的key就是session-key参数的值。
         HttpSession.setAttribute(session-key,text);
