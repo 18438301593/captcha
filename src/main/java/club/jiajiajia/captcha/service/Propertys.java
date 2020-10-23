@@ -61,7 +61,7 @@ public class Propertys {
     //图片字符长度
     private int length=5;
     //session key
-    private String sessionKey;
+    private String sessionKey="code";
     //字体大小
     private int size=32;
     //验证码字符类型

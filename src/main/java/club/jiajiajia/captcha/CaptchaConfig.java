@@ -1,9 +1,12 @@
 package club.jiajiajia.captcha;
 
+import club.jiajiajia.captcha.exception.CaptchaError;
 import club.jiajiajia.captcha.exception.CaptchaExceptionHandler;
+import club.jiajiajia.captcha.service.CaptchaErrReMsg;
 import club.jiajiajia.captcha.service.EnabledCondition;
 import club.jiajiajia.captcha.service.Propertys;
 import club.jiajiajia.captcha.service.CaptchaServlet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -40,6 +43,9 @@ public class CaptchaConfig {
         return bean;
     }
 
+    @Autowired(required = false)
+    private CaptchaErrReMsg captchaErrReMsg;
+
     /**
      * 异常拦截器
      * @param propertys
@@ -49,6 +55,14 @@ public class CaptchaConfig {
     @Bean
     @Conditional(value ={EnabledCondition.class})
     public CaptchaExceptionHandler getCaptchaExceptionHandler(Propertys propertys) throws Exception{
-        return new CaptchaExceptionHandler(Class.forName(propertys.getErrMsgClass()).newInstance());
+        if(captchaErrReMsg!=null){
+            return new CaptchaExceptionHandler(captchaErrReMsg);
+        }else{
+            if(propertys.getErrMsgClass()!=null){
+                return new CaptchaExceptionHandler(new CaptchaError());
+            }else{
+                return new CaptchaExceptionHandler(Class.forName(propertys.getErrMsgClass()).newInstance());
+            }
+        }
     }
 }
