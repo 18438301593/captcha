@@ -7,10 +7,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * @ClassName LogAopAdapter
@@ -25,6 +23,9 @@ public class CaptchaAdapter {
     @Resource
     private Propertys propertys;
 
+    @Resource
+    private CodeObtain codeObtain;
+
     @Pointcut("@annotation(club.jiajiajia.captcha.service.Captcha)")
     public void captcha(){}
 
@@ -36,16 +37,15 @@ public class CaptchaAdapter {
     public void doBefore() {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request=attributes.getRequest();
-        HttpSession session=request.getSession();
-        String s_code=(String)session.getAttribute(propertys.getSessionKey());
+        String s_code=codeObtain.getCode(propertys.getSessionKey(),request,attributes.getResponse());
         String code=request.getParameter(propertys.getSessionKey());
         /**
          * 验证码校验
          */
         if(s_code==null||!s_code.equals(code)){
-            session.removeAttribute(propertys.getSessionKey());
+            codeObtain.removeCode(propertys.getSessionKey(),request,attributes.getResponse());
             throw new CaptchaException();
         }
-        session.removeAttribute(propertys.getSessionKey());
+        codeObtain.removeCode(propertys.getSessionKey(),request,attributes.getResponse());
     }
 }

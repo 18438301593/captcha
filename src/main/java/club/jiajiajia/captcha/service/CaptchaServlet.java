@@ -1,6 +1,5 @@
 package club.jiajiajia.captcha.service;
 import club.jiajiajia.captcha.captcha.SpecCaptcha;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,10 +13,14 @@ import java.io.IOException;
  * @Version V1.0
  **/
 public class CaptchaServlet extends HttpServlet {
-    public CaptchaServlet(Propertys propertys){
+    public CaptchaServlet(Propertys propertys,CodeObtain codeObtain){
+        this.codeObtain=codeObtain;
         this.propertys=propertys;
         font=new Font("Verdana", Font.PLAIN, propertys.getSize());
     }
+
+    private CodeObtain codeObtain;
+
     private Font font;
     private Propertys propertys;
     @Override
@@ -25,7 +28,7 @@ public class CaptchaServlet extends HttpServlet {
         SpecCaptcha specCaptcha=new SpecCaptcha(propertys.getWidth(),propertys.getHeight(),propertys.getLength());
         specCaptcha.setFont(font);
         specCaptcha.setCharType(propertys.getType());
-        req.getSession().setAttribute(propertys.getSessionKey(),specCaptcha.text());
+        codeObtain.setCode(specCaptcha.text(),propertys.getSessionKey(),req,resp);
         setHeader(resp);
         specCaptcha.out(resp.getOutputStream());
     }

@@ -1,14 +1,12 @@
 package club.jiajiajia.captcha.exception;
 
-import club.jiajiajia.captcha.service.CaptchaErrReMsg;
-
 /**
  * @ClassName CaptchaError
  * @Description: 默认验证码错误返回数据
  * @Author Jiajiajia
  * @Version V1.0
  **/
-public class CaptchaError implements CaptchaErrReMsg {
+public class CaptchaError {
     private int code=-1;
     private String message="验证码错误";
 

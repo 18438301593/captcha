@@ -2,11 +2,9 @@ package club.jiajiajia.captcha;
 
 import club.jiajiajia.captcha.exception.CaptchaError;
 import club.jiajiajia.captcha.exception.CaptchaExceptionHandler;
-import club.jiajiajia.captcha.service.CaptchaErrReMsg;
-import club.jiajiajia.captcha.service.EnabledCondition;
-import club.jiajiajia.captcha.service.Propertys;
-import club.jiajiajia.captcha.service.CaptchaServlet;
+import club.jiajiajia.captcha.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -34,11 +32,11 @@ public class CaptchaConfig {
      */
     @Bean
     @Conditional(value ={EnabledCondition.class})
-    public ServletRegistrationBean getServletRegistrationBean(Propertys propertys) throws Exception{
+    public ServletRegistrationBean getServletRegistrationBean(Propertys propertys,CodeObtain codeObtain) throws Exception{
         if(propertys.getSessionKey()==null||"".equals(propertys)){
             throw new Exception("jiajiajia.captcha.session-key can not be null!");
         }
-        ServletRegistrationBean bean = new ServletRegistrationBean(new CaptchaServlet(propertys));
+        ServletRegistrationBean bean = new ServletRegistrationBean(new CaptchaServlet(propertys,codeObtain));
         bean.addUrlMappings(propertys.getPath());
         return bean;
     }
@@ -64,5 +62,16 @@ public class CaptchaConfig {
                 return new CaptchaExceptionHandler(Class.forName(propertys.getErrMsgClass()).newInstance());
             }
         }
+    }
+
+    /**
+     *  验证码存取规则
+     * @return
+     */
+    @Bean
+    @Conditional(value ={EnabledCondition.class})
+    @ConditionalOnMissingBean(CodeObtain.class)
+    public CodeObtain getCodeObtain(){
+        return new CodeSessionObtain();
     }
 }
